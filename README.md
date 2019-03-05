@@ -21,6 +21,33 @@ import {JsonToClass,Json } from 'json-class'
 ```
 import "reflect-metadata";
 import {JsonToClass ,Json} from 'json-class'
+class Propertie {
+  @Json
+  name: string;
+
+  @Json(String)                     //Array string
+  values: string[]
+}
+
+class Sku {
+  @Json
+  name: string = "拉面";             //default value
+
+  @Json
+  price: string;
+
+  @Json("sku_id")                  //alias key name
+  skuid: string;
+
+  @Json
+  spec: string;
+
+  @Json
+  stock: number;                   // string convert to number
+
+  @Json                              //add new key and default value
+  isChecked: boolean = false;
+}
 
  class Good {
     @Json
@@ -57,33 +84,7 @@ import {JsonToClass ,Json} from 'json-class'
     properties: Propertie;       //Object conversion
   }
 
-class Sku {
-  @Json
-  name: string = "拉面";             //default value
 
-  @Json
-  price: string;
-
-  @Json("sku_id")                  //alias key name
-  skuid: string;
-
-  @Json
-  spec: string;
-
-  @Json
-  stock: number;                   // string convert to number
-
-  @Json                              //add new key and default value
-  isChecked: boolean = false;
-}
-
-class Propertie {
-  @Json
-  name: string;
-
-  @Json(String)                     //Array string
-  values: string[]
-}
 ```
 ```
 const tansformJson = {
