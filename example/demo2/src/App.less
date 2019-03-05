@@ -1,0 +1,47 @@
+html, body, #root {
+  height: 100%;
+}
+.json-wrapper {
+  background-color: #ccc;
+  height: 100%;
+  .tool-bar {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    > p {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 0 10px;
+      &:hover {
+        color: darkred;
+      }
+    }
+  }
+  .input-output-group {
+    display: flex;
+    height: calc(100% - 50px);
+    pre {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #1e1e1e!important;
+      border: none!important;
+      border-radius: 0!important;
+      height: 100%;
+    }
+    .input-left {
+      height: 100%;
+      overflow: auto;
+    }
+    .output-middle {
+      height: 100%;
+      width: 30%;
+      overflow: auto;
+    }
+    .pre-right {
+      height: 100%;
+      overflow: auto;
+      flex: 1 1 auto;
+    }
+  }
+}

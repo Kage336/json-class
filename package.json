@@ -1,0 +1,27 @@
+{
+  "name": "json-class",
+  "version": "0.5.0",
+  "description": "typescipt json class reflect-metadata",
+  "main": "./dist/index.js",
+  "scripts": {
+    "compiler": "rimraf -rf ./dist &&tsc",
+    "watch": "tsc -w",
+    "test": "jest dist/test --watch --config=jest.config.js"
+  },
+  "author": "kage336",
+  "license": "ISC",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/benchmark": "^1.0.31",
+    "@types/jest": "^24.0.9",
+    "@types/node": "^10.12.27",
+    "@types/reflect-metadata": "^0.1.0",
+    "concurrently": "^4.1.0",
+    "jest": "^24.1.0",
+    "nodemon": "^1.18.9",
+    "typescript": "^3.2.2",
+    "rimraf": "^2.6.3"
+  }
+}
