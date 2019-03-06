@@ -1,6 +1,6 @@
 {
   "name": "json-class",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "typescipt json class reflect-metadata",
   "main": "./dist/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "concurrently": "^4.1.0",
     "jest": "^24.1.0",
     "nodemon": "^1.18.9",
-    "typescript": "^3.2.2",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "typescript": "^3.2.2"
   }
 }

@@ -51,7 +51,7 @@ class Sku {
   @Json
   stock: number;                   // string convert to number
 
-  @Json                              //add new key and default value
+  //add new key and default value
   isChecked: boolean = false;
 }
 
@@ -105,18 +105,11 @@ class Sku {
   @Json
   spec: string;
 
-  //@Json
-  //stock: string;                   // string convert to number
+  @Json
+  stock: string;                   // string convert to number
 
-  @Json                              //add new key and default value
+
   isChecked: boolean = false;
-
-
-  get custom() {
-
-    return "";
-  }
-
 
 }
 
@@ -145,10 +138,10 @@ export class Good {
   price: string;
 
   @Json
-  min_order_count: number
+  min_order_count: number = 0
 
   @Json
-  unit: string;
+  unit: string = "";
 
   @Json
   category_name: string;
