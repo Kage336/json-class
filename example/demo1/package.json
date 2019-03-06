@@ -9,7 +9,6 @@
     "@types/node": "11.9.5",
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",
-    "@types/reflect-metadata": "^0.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
@@ -134,7 +133,6 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "ts-loader": "^5.3.3",
-    "typescript": "^3.3.3333",
-    "json-class": "lastest"
+    "typescript": "^3.3.3333"
   }
 }

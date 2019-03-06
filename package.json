@@ -1,6 +1,6 @@
 {
   "name": "json-class",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "typescipt json class reflect-metadata",
   "main": "./dist/index.js",
   "scripts": {

@@ -5,7 +5,7 @@ export const tansformType =
     name: string;
   
     @Json
-    subname: string;
+    place: string;
   
     @Json(['name', 'place'], (name, place) => place + name) //custom convert function
     fullname: string;
@@ -105,11 +105,19 @@ class Sku {
   @Json
   spec: string;
 
-  @Json
-  stock: number;                   // string convert to number
+  //@Json
+  //stock: string;                   // string convert to number
 
   @Json                              //add new key and default value
   isChecked: boolean = false;
+
+
+  get custom() {
+
+    return "";
+  }
+
+
 }
 
 class Propertie {
@@ -125,7 +133,7 @@ export class Good {
   name: string;
 
   @Json
-  subname: string;
+  place: string;
 
   @Json(['name', 'place'], (name, place) => place + name) //custom convert function
   fullname: string;
