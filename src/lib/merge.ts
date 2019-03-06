@@ -59,50 +59,55 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
         const formatParam = format.formatParamKeys.map(key => objValue[key]);
         srcValue[key] = format.formatFunc(...formatParam);
       } else {
-        if (baseType.includes(PropClass.name.toLowerCase())) {
-          // 基础类型 直接重置
-          _tansformToBaseType(objValue, usefullKey, srcValue, key, PropClass, Clazz, verbose);
-        } else {
-          // 引用类型
-          if (Array.isArray(srcValue[key])) {
-            // 如果是数组
-            const InnerClass = Reflect.getOwnMetadata(metadataInnerType, target, key);
-            if (InnerClass) {
-              // 正确传值
-              if (Array.isArray(objValue[usefullKey])) {
-                // 类型合法
-                if (baseType.includes(InnerClass.name.toLowerCase())) {
-                  // 数组泛型为基础类型
-                  srcValue[key] = objValue[usefullKey].map((val) => {
-                    if (val) {
-                      // 如果被序列化对象有值
-                      if (!baseType.includes(typeof val)) {
-                        // (有争议的类型转换) 基础类型与引用类型之间转换
-                        verbose && logger(InnerClass, '', val, (new InnerClass()).valueOf(), `${key} Array<${InnerClass.name.toLowerCase()}>`)
-                        return null;
+        if (PropClass) {
+          // 如果添加了序列化标记
+          if (baseType.includes(PropClass.name.toLowerCase())) {
+            // 基础类型 直接重置
+            _tansformToBaseType(objValue, usefullKey, srcValue, key, PropClass, Clazz, verbose);
+          } else {
+            // 引用类型
+            if (Array.isArray(srcValue[key])) {
+              // 如果是数组
+              const InnerClass = Reflect.getOwnMetadata(metadataInnerType, target, key);
+              if (InnerClass) {
+                // 正确传值
+                if (Array.isArray(objValue[usefullKey])) {
+                  // 类型合法
+                  if (baseType.includes(InnerClass.name.toLowerCase())) {
+                    // 数组泛型为基础类型
+                    srcValue[key] = objValue[usefullKey].map((val) => {
+                      if (val) {
+                        // 如果被序列化对象有值
+                        if (!baseType.includes(typeof val)) {
+                          // (有争议的类型转换) 基础类型与引用类型之间转换
+                          verbose && logger(InnerClass, '', val, (new InnerClass()).valueOf(), `${key} Array<${InnerClass.name.toLowerCase()}>`)
+                          return null;
+                        } else {
+                          const transformedVal = InnerClass(val);
+                          return Number.isNaN(transformedVal) ? null : transformedVal;
+                        }
                       } else {
-                        const transformedVal = InnerClass(val);
-                        return Number.isNaN(transformedVal) ? null : transformedVal;
+                        // 如果被序列化对象没有值，重置为默认值或初始值
+                        return null
                       }
-                    } else {
-                      // 如果被序列化对象没有值，重置为默认值或初始值
-                      return null
-                    }
-                  });
-                } else {
-                  // 数组泛型为引用类型
-                  srcValue[key] = objValue[usefullKey].map(val => val ? _jsonToClass(val, InnerClass) : null)
+                    });
+                  } else {
+                    // 数组泛型为引用类型
+                    srcValue[key] = objValue[usefullKey].map(val => val ? _jsonToClass(val, InnerClass) : null)
+                  }
                 }
+              } else {
+                // 未传入数组泛型
+                srcValue[key] = objValue[usefullKey] || []
+                verbose && logger(Clazz, key, objValue[usefullKey] || [], objValue[usefullKey] || [])
               }
             } else {
-              // 未传入数组泛型
-              srcValue[key] = objValue[usefullKey] || []
-              verbose && logger(Clazz, key, objValue[usefullKey] || [], objValue[usefullKey] || [])
+              // 其他引用类型
+              srcValue[key] = objValue[usefullKey] ? _jsonToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : null;
             }
-          } else {
-            // 其他引用类型
-            srcValue[key] = objValue[usefullKey] ? _jsonToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : null;
           }
+        } else {
+          // 如果没有添加了序列化标记
         }
       }
     })
