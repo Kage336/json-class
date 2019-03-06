@@ -14,13 +14,13 @@
 npm i -S json-class reflect-metadata
 
 import "reflect-metadata";
-import {JsonToClass,Json } from 'json-class'
+import {ToClass,Json } from 'json-class'
 
 
 #example of using
 ```
 import "reflect-metadata";
-import {JsonToClass ,Json} from 'json-class'
+import {ToClass ,Json} from 'json-class'
 class Propertie {
   @Json
   name: string;
@@ -116,7 +116,7 @@ const tansformJson = {
 }
 ```
 ```
-console.log(JsonToClass(tansformJson, Good));
+console.log(ToClass(tansformJson, Good));
 
 //output==>
 {

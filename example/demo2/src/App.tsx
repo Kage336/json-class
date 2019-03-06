@@ -1,7 +1,7 @@
 import "./test/speed.test";
 import "./App.less";
 import React, { useState } from 'react';
-import { JsonToClass } from "json-class";
+import { ToClass } from "json-class";
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import JSONInput from "react-json-editor-ajrm/index";
@@ -38,7 +38,7 @@ const testPage: React.SFC<any> = (props) => {
     setDefineCode(defineCode);
     setJsonInputVal(jsonInputVal);
     Clazz$.next(clazz);
-    jsonInput$.next({ error: false, toClassStr: JSON.stringify(JsonToClass(jsonInputVal, clazz), undefined, 2), jsObject: jsonInputVal })
+    jsonInput$.next({ error: false, toClassStr: JSON.stringify(ToClass(jsonInputVal, clazz), undefined, 2), jsObject: jsonInputVal })
   }
   const [defineCode, setDefineCode] = useState(tansformType);
   const [jsonInputVal, setJsonInputVal] = useState(tansformJson as any);
@@ -47,7 +47,7 @@ const testPage: React.SFC<any> = (props) => {
   const { toClassStr } = useObservable((_: Observable<IState>) =>
     combineLatest(
       jsonInput$.pipe(
-        startWith({ error: false, toClassStr: JSON.stringify(JsonToClass(tansformJson, Good), undefined, 2), jsObject: tansformJson })),
+        startWith({ error: false, toClassStr: JSON.stringify(ToClass(tansformJson, Good), undefined, 2), jsObject: tansformJson })),
       Clazz$.pipe(startWith(Good)
       )
     )
@@ -55,7 +55,7 @@ const testPage: React.SFC<any> = (props) => {
         // tap(_ => Clazz$.subscribe(console.log)),
         filter(([{ error }]) => !error),
         // debounceTime(1000),
-        map(([data, Clazz]) => ({ ...data, toClassStr: JSON.stringify(JsonToClass(data.jsObject, Clazz), undefined, 2) }))
+        map(([data, Clazz]) => ({ ...data, toClassStr: JSON.stringify(ToClass(data.jsObject, Clazz), undefined, 2) }))
       )
     , { error: false, toClassStr: '' })
 

@@ -69,7 +69,7 @@ export const tansformJson = {
   "place": "兰州",
   "description": "",
   "price": 11,
-  "min_order_count": 1,
+  "min_order_count": { a: 1 },
   "unit": "支",
   "category_name": "分类",
   "picture": "http://p0.meituan.net/34747.jpg",
@@ -138,7 +138,7 @@ export class Good {
   price: string;
 
   @Json
-  min_order_count: number = 0
+  min_order_count: number
 
   @Json
   unit: string = "";

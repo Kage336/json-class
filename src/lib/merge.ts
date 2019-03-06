@@ -32,8 +32,8 @@ function decFakeInherit(target): any {
 }
 // 基础类型
 
-export function JsonToClass<T = any>(objValue: object, Clazz, verbose: boolean = true): T {
-  const result = _jsonToClass(objValue, Clazz, null, verbose)
+export function ToClass<T = any>(objValue: object, Clazz, verbose: boolean = true): T {
+  const result = _ToClass(objValue, Clazz, null, verbose)
   return result;
 }
 
@@ -42,7 +42,7 @@ export function JsonToClass<T = any>(objValue: object, Clazz, verbose: boolean =
  * @param objValue 待序列化的 [json/object]
  * @param Clazz 序列化为的对象
  */
-function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boolean = true) {
+function _ToClass(objValue: object, Clazz, defaultVal = null, verbose: boolean = true) {
   const target = Clazz.prototype;
   const srcValue = defaultVal || (Reflect.getOwnMetadata(metadataMarked, target) ? new (decFakeInherit(Clazz)) : new Clazz);
   Object.setPrototypeOf(srcValue || {}, target || Object.prototype)
@@ -93,7 +93,7 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
                     });
                   } else {
                     // 数组泛型为引用类型
-                    srcValue[key] = objValue[usefullKey].map(val => val ? _jsonToClass(val, InnerClass) : null)
+                    srcValue[key] = objValue[usefullKey].map(val => val ? _ToClass(val, InnerClass) : null)
                   }
                 }
               } else {
@@ -103,7 +103,7 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
               }
             } else {
               // 其他引用类型
-              srcValue[key] = objValue[usefullKey] ? _jsonToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : null;
+              srcValue[key] = objValue[usefullKey] ? _ToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : null;
             }
           }
         } else {

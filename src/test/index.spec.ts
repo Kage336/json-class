@@ -1,4 +1,4 @@
-import { JsonToClass, Json } from "../";
+import { ToClass, Json } from "../";
 
 enum IEnum {
   a,
@@ -92,7 +92,7 @@ describe('基础边缘条件测试', () => {
     const response = {
       num: '1456'
     }
-    const result = JsonToClass<Person>(response, Person);
+    const result = ToClass<Person>(response, Person);
     expect(result.num).toBe(1456);
   })
   const aa = new Person
@@ -112,26 +112,18 @@ describe('基础边缘条件测试', () => {
       },
       obj: false
     }
-    const result = JsonToClass(response, Person, false);
-    // 定义类型为 number， 实际为对象
-    expect(result.num).toBe(0);
-    // 定义类型为 string， 实际为对象
-    expect(result.str).toBe('');
-    // 定义类型为 boolean 实际为对象
-    expect(result.bol).toBe(false);
-    // 定义类型为 Object 实际为 基础类型
-    expect(result.obj).toEqual({
-      ischeck: false,
-      firstname: 0,
-      lastname: ''
-    });
+    const result = ToClass(response, Person, false);
+    expect(result.num).toBe(null);
+    expect(result.str).toEqual(null);
+    expect(result.bol).toBe(null);
+    expect(result.obj).toEqual(null);
   })
 
   test('测试重命名功能', () => {
     const response = {
       skill: '来自属性 skill'
     }
-    const result = JsonToClass(response, Person);
+    const result = ToClass(response, Person);
     expect(response.skill).toBe(result.Skill);
   })
 
@@ -140,7 +132,7 @@ describe('基础边缘条件测试', () => {
       'first-name': 'first-name',
       'second-name': 'second-name',
     }
-    const result = JsonToClass(response, Person);
+    const result = ToClass(response, Person);
     expect(result.fullname).toBe(`${response['first-name']}·${response['second-name']}`);
   })
 })

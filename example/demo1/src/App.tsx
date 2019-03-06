@@ -3,7 +3,7 @@ import "./App.less";
 import React, { useState } from 'react';
 
 import "reflect-metadata";
-import { JsonToClass, Json } from 'json-class'
+import { ToClass, Json } from 'json-class'
 
 class Propertie {
   @Json
@@ -100,7 +100,7 @@ const tansformJson = {
 
 const testPage: React.SFC<any> = (props) => {
 
-  console.log(JsonToClass<Good>(tansformJson, Good));
+  console.log(ToClass<Good>(tansformJson, Good));
 
 
   return (<div className="json-wrapper">

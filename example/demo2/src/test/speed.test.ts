@@ -1,4 +1,4 @@
-import { Json, JsonToClass } from "json-class";
+import { Json, ToClass } from "json-class";
 import { data } from "./data/data";
 import { data1 } from "./data/1";
 import { data2 } from "./data/2";
@@ -55,19 +55,19 @@ console.log(data)
 
 console.time();
 // console.log(berfore.valueOf());
-const result = JsonToClass(data.data, MyData)
+const result = ToClass(data.data, MyData)
 console.timeEnd()
 console.time();
 // console.log(berfore.valueOf());
-const result1 = JsonToClass(data1.data, MyData)
+const result1 = ToClass(data1.data, MyData)
 console.timeEnd()
 console.time();
 // console.log(berfore.valueOf());
-const result2 = JsonToClass(data2.data, MyData)
+const result2 = ToClass(data2.data, MyData)
 console.timeEnd()
 console.time();
 // console.log(berfore.valueOf());
-const result3 = JsonToClass(data3.data, MyData)
+const result3 = ToClass(data3.data, MyData)
 console.timeEnd()
 console.log('result ===>', result);
 
