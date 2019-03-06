@@ -21,14 +21,10 @@ function decFakeInherit(target): any {
       if (PropClass) {
         if (this[key] !== undefined) {
           // 已经设置了初始值
+        } else if (PropClass === Array) {
+          this[key] = []
         } else {
-          if (baseType.includes(PropClass.name.toLowerCase())) {
-            // 基础类型
-            this[key] = new PropClass().valueOf();
-          } else {
-            // 引用类型
-            this[key] = new PropClass()
-          }
+          this[key] = null;
         }
       }
     })
@@ -49,9 +45,9 @@ export function JsonToClass<T = any>(objValue: object, Clazz, verbose: boolean =
 function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boolean = true) {
   const target = Clazz.prototype;
   const srcValue = defaultVal || (Reflect.getOwnMetadata(metadataMarked, target) ? new (decFakeInherit(Clazz)) : new Clazz);
+  Object.setPrototypeOf(srcValue || {}, target || Object.prototype)
   const effectiveKeys = Object.keys(srcValue);
   effectiveKeys
-    .filter(key => srcValue[key] !== undefined)
     .forEach(key => {
       // 期望类型的构造函数
       const PropClass = Reflect.getOwnMetadata(metadataType, target, key);
@@ -66,7 +62,6 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
         if (baseType.includes(PropClass.name.toLowerCase())) {
           // 基础类型 直接重置
           _tansformToBaseType(objValue, usefullKey, srcValue, key, PropClass, Clazz, verbose);
-          // srcValue[key] = objValue[usefullKey] ? (PropClass(objValue[usefullKey]) || srcValue[key] || (new PropClass()).valueOf()) : (srcValue[key] || (new PropClass()).valueOf());
         } else {
           // 引用类型
           if (Array.isArray(srcValue[key])) {
@@ -84,19 +79,19 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
                       if (!baseType.includes(typeof val)) {
                         // (有争议的类型转换) 基础类型与引用类型之间转换
                         verbose && logger(InnerClass, '', val, (new InnerClass()).valueOf(), `${key} Array<${InnerClass.name.toLowerCase()}>`)
-                        return (new InnerClass()).valueOf();
+                        return null;
                       } else {
-                        return InnerClass(val)
+                        const transformedVal = InnerClass(val);
+                        return Number.isNaN(transformedVal) ? null : transformedVal;
                       }
                     } else {
                       // 如果被序列化对象没有值，重置为默认值或初始值
-                      return (new InnerClass()).valueOf();
+                      return null
                     }
                   });
-                  // srcValue[key] = objValue[usefullKey].map(val => val ? (PropClass(val) || srcValue[key] || (new PropClass()).valueOf()) : (srcValue[key] ||(new PropClass()).valueOf()));
                 } else {
                   // 数组泛型为引用类型
-                  srcValue[key] = objValue[usefullKey].map(val => _jsonToClass(val, InnerClass))
+                  srcValue[key] = objValue[usefullKey].map(val => val ? _jsonToClass(val, InnerClass) : null)
                 }
               }
             } else {
@@ -106,7 +101,7 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
             }
           } else {
             // 其他引用类型
-            srcValue[key] = _jsonToClass(objValue[usefullKey] || {}, PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null);
+            srcValue[key] = objValue[usefullKey] ? _jsonToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : null;
           }
         }
       }
@@ -123,20 +118,18 @@ function _jsonToClass(objValue: object, Clazz, defaultVal = null, verbose: boole
  * @param PropClass 属性构造函数
  */
 function _tansformToBaseType(objValue: object, objKey: string, srcValue: object, srcKey: string, PropClass, ClazzName: string, verbose: boolean = true) {
-  if (objValue[objKey]) {
+  if (objValue[objKey] !== undefined) {
     // 如果被序列化对象有值
     if (!baseType.includes(typeof objValue[objKey])) {
       // (有争议的类型转换) 基础类型与引用类型之间转换
-      srcValue[srcKey] = srcValue[srcKey] || (new PropClass()).valueOf();
       verbose && logger(ClazzName, srcKey, objValue[objKey], srcValue[srcKey]);
     } else {
       const transformedVal = PropClass(objValue[objKey])
-      srcValue[srcKey] = transformedVal || srcValue[srcKey] || (new PropClass()).valueOf();
+      srcValue[srcKey] = Number.isNaN(transformedVal) ? srcValue[srcKey] : transformedVal; // NaN 重置为默认值
       verbose && Number.isNaN(transformedVal) && logger(ClazzName, srcKey, objValue[objKey], srcValue[srcKey]);
     }
   } else {
     // 如果被序列化对象没有值，重置为默认值或初始值
-    srcValue[srcKey] = srcValue[srcKey] || (new PropClass()).valueOf();
   }
 }
 
