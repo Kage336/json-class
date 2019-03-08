@@ -103,7 +103,7 @@ function _ToClass(objValue: object, Clazz, defaultVal = null, verbose: boolean =
               }
             } else {
               // 其他引用类型
-              srcValue[key] = objValue[usefullKey] ? _jsonToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : srcValue[key];
+              srcValue[key] = objValue[usefullKey] ? _ToClass(objValue[usefullKey], PropClass, srcValue[key] && Object.keys(srcValue[key]).length ? srcValue[key] : null) : srcValue[key];
             }
           }
         } else {
